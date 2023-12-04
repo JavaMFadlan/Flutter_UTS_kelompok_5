@@ -1,24 +1,24 @@
-import 'package:flutter/material.dart';
-import 'KatalogPage.dart';
-import 'LoginPage.dart';
-import 'AboutPage.dart';
+    import 'package:flutter/material.dart';
+    import 'HomePage.dart';
+    import 'LoginPage.dart';
+    import 'KatalogPage.dart';
 
-class HomePage extends StatelessWidget {
+   class AboutPage extends StatelessWidget {
   final String email;
 
-  HomePage({required this.email});
+  AboutPage({required this.email});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('About Page'),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+           DrawerHeader(
               child: Text(''),
               decoration: BoxDecoration(
                 color: Colors.blue,
@@ -59,28 +59,24 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      body: Transform.translate(
-          offset: Offset(0.0, -40.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Selamat Datang Kembali!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
-                SizedBox(
-                  height: 30.0,
-                  ),
-                CircleAvatar(
-                  backgroundColor: Colors.brown.shade800,
+      body: Center(
+        child: Column(
+          
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+                  backgroundColor: Colors.blueAccent,
                   radius: 60.0,
                 ),
                 SizedBox(
                   height: 30.0,
-                  ),
-                Text('Email : ' + email, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
-              ],
-            ),
-          ),
-          ),
+                ),
+            Text('Kelompok 5', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0)),
+          ],
+        ),
+      ),
     );
   }
 }
+
+

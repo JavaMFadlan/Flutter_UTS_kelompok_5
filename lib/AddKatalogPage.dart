@@ -19,48 +19,54 @@ class AddKatalogPage extends StatelessWidget {
      appBar: AppBar(
        title: const Text('Add Katalog Page'),
      ),
-     body: Column(
-       children: [
-         TextFormField(
-           controller: namaController,
-           decoration: const InputDecoration(
-             labelText: 'Nama',
+     body: Padding(
+       padding: const EdgeInsets.all(20.0),
+       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+         children: [
+           TextFormField(
+             controller: namaController,
+             decoration: const InputDecoration(
+               labelText: 'Nama',
+             ),
            ),
-         ),
-         TextFormField(
-           controller: hargaController,
-           decoration: const InputDecoration(
-             labelText: 'Harga',
+           TextFormField(
+             controller: hargaController,
+             decoration: const InputDecoration(
+               labelText: 'Harga',
+             ),
+             keyboardType: TextInputType.number,
+             inputFormatters: <TextInputFormatter>[
+               FilteringTextInputFormatter.digitsOnly
+             ],
            ),
-           keyboardType: TextInputType.number,
-           inputFormatters: <TextInputFormatter>[
-             FilteringTextInputFormatter.digitsOnly
-           ],
-         ),
-         TextFormField(
-           controller: deskripsiController,
-           decoration: const InputDecoration(
-             labelText: 'Deskripsi',
+           TextFormField(
+             controller: deskripsiController,
+             decoration: const InputDecoration(
+               labelText: 'Deskripsi',
+             ),
            ),
-         ),
-         ElevatedButton(
-           onPressed: () {
-             String email = this.email;
-             String nama = namaController.text;
-             int? harga = int.tryParse(hargaController.text);
-             if (harga == null) {
-               // Handle the error when harga is not a valid integer
-               print('Invalid harga');
-               return;
-             }
-             String deskripsi = deskripsiController.text;
-             dbHelper.insertKatalog(email, nama, harga, deskripsi);
-             Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => KatalogPage(email: email)));
-           },
-           child: const Text('Submit'),
-         ),
-       ],
+           SizedBox(
+              height: 30.0,
+            ),
+           ElevatedButton(
+             onPressed: () {
+               String email = this.email;
+               String nama = namaController.text;
+               int? harga = int.tryParse(hargaController.text);
+               if (harga == null) {
+                 print('Invalid harga');
+                 return;
+               }
+               String deskripsi = deskripsiController.text;
+               dbHelper.insertKatalog(email, nama, harga, deskripsi);
+               Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => KatalogPage(email: email)));
+             },
+             child: const Text('Submit'),
+           ),
+         ],
+       ),
      ),
    );
  }

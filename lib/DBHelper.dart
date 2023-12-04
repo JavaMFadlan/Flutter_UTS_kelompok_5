@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 class DBHelper {
   static final DBHelper _instance = DBHelper._internal();
@@ -58,7 +59,8 @@ class DBHelper {
        conflictAlgorithm: ConflictAlgorithm.replace,
      );
    }
-   Future<User?> getLogin(String email, String password) async {
+
+    Future<User?> getLogin(String email, String password) async {
     final db = await database;
     var res = await db.rawQuery("SELECT * FROM users WHERE email = '$email' and password = '$password'");
     if (res.length > 0) {
@@ -74,6 +76,20 @@ class DBHelper {
        return Katalog.fromMap(maps[i]);
      });
    }
+
+   Future<Katalog> getKatalogById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'katalog',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (maps.length > 0) {
+      return Katalog.fromMap(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
+  }
 
 
   Future<void> close() async {
@@ -98,15 +114,17 @@ class User {
 }
 
 class Katalog {
+    final int id;
     final String email;
     final String nama;
     final int harga;
     final String deskripsi;
 
-    Katalog({required this.email, required this.nama, required this.harga, required this.deskripsi});
+    Katalog({required this.id, required this.email, required this.nama, required this.harga, required this.deskripsi});
 
     factory Katalog.fromMap(Map<String, dynamic> json) {
       return Katalog(
+        id: json['id'],
         email: json['email'],
         nama: json['nama'],
         harga: int.tryParse(json['harga'].toString()) ?? 0,
