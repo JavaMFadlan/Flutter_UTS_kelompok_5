@@ -1,7 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart' as syspaths;
 
 class DBHelper {
   static final DBHelper _instance = DBHelper._internal();
