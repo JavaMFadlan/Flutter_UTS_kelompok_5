@@ -8,10 +8,10 @@ import 'DBHelper.dart';
 
 class DetailPage extends StatelessWidget {
   final int id;
-  final String email;
+  final String username;
   final DBHelper dbHelper = DBHelper();
 
-  DetailPage({required this.id, required this.email});
+  DetailPage({required this.id, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class DetailPage extends StatelessWidget {
               title: Text('Home'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage(email: email)));
+                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
               },
             ),
             ListTile(
@@ -42,7 +42,7 @@ class DetailPage extends StatelessWidget {
               title: Text('List'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(email: email)));
+                    builder: (_) => KatalogPage(username: username)));
               },
             ),
             ListTile(
@@ -50,7 +50,7 @@ class DetailPage extends StatelessWidget {
               title: Text('About'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(email: email)));
+                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
               },
             ),
             ListTile(
@@ -133,7 +133,7 @@ class DetailPage extends StatelessWidget {
                               radius: 10.0,
                             ),
                           ),
-                          Text(' ${snapshot.data?.email ?? 'Default Value'}', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.0)),
+                          Text(' ${'Default Value'}', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.0)),
                         ],
                       ),
                     ),

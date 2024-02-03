@@ -8,9 +8,9 @@ import 'AddKatalogPage.dart';
 import 'DetailPage.dart';
 
 class KatalogPage extends StatelessWidget {
-  final String email;
+  final String username;
   final DBHelper dbHelper = DBHelper();
-  KatalogPage({required this.email});
+  KatalogPage({required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class KatalogPage extends StatelessWidget {
               title: Text('Home'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage(email: email)));
+                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
               },
             ),
             ListTile(
@@ -41,7 +41,7 @@ class KatalogPage extends StatelessWidget {
               title: Text('List'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(email: email)));
+                    builder: (_) => KatalogPage(username: username)));
               },
             ),
             ListTile(
@@ -49,7 +49,7 @@ class KatalogPage extends StatelessWidget {
               title: Text('About'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(email: email)));
+                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
               },
             ),
             ListTile(
@@ -76,7 +76,7 @@ class KatalogPage extends StatelessWidget {
                     subtitle: Text(CurrencyFormat.convertToIdr(snapshot.data![index].harga, 2)),
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => DetailPage(id: snapshot.data![index].id, email: email)));
+                    builder: (_) => DetailPage(id: snapshot.data![index].id, username: username)));
                     },
                   ),
                 );
@@ -93,7 +93,7 @@ class KatalogPage extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddKatalogPage(email: email)));
+                  builder: (context) => AddKatalogPage(username: username)));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.lightBlue,

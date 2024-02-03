@@ -4,6 +4,12 @@ import 'LoginPage.dart';
 import 'SignUpPage.dart';
 import 'HomePage.dart';
 import 'KatalogPage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_uts/repository/login_repository.dart';
+import 'layout/homepage.dart';
+import '../bloc/login_bloc.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -13,28 +19,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Login App',
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        if (settings.name == '/') {
-          return MaterialPageRoute(builder: (context) => SplashScreen());
-        } else if (settings.name == '/login') {
-          return MaterialPageRoute(builder: (context) => LoginPage());
-        } else if (settings.name == '/signup') {
-          return MaterialPageRoute(builder: (context) => SignupPage());
-        } else if (settings.name == '/home') {
-          final args = settings.arguments as String;
-          return MaterialPageRoute(builder: (context) => HomePage(email: args));
-        } else if (settings.name == '/katalog') {
-          final args = settings.arguments as String;
-          return MaterialPageRoute(builder: (context) => KatalogPage(email: args));
-        }
-         else {
-          throw Exception('Invalid route');
-        }
-      },
-    );
+    
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+            create: (context) => LoginRepository(),
+          ), // RepositoryProvider
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) =>
+                  LoginBloc(loginRepository: context.read<LoginRepository>())
+                    ..add(const InitLogin()),
+            ), // BlocProvider
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: "YOOO THRIFTHING",
+            home: HomePage()
+          ),
+        ), // MultiBlocProvider
+      ); // MultiRepositoryProvider
+    
   }
 }
 

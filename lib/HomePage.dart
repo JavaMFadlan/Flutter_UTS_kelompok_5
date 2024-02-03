@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'KatalogPage.dart';
 import 'LoginPage.dart';
 import 'AboutPage.dart';
+import '../bloc/login_bloc.dart';
+import 'layout/login.dart';
+import 'layout/loading.dart';
+import 'layout/dashboard.dart';
+import 'layout/error_message.dart';
 
-class HomePage extends StatelessWidget {
-  final String email;
+class HomePage_ extends StatelessWidget {
+  final String username;
 
-  HomePage({required this.email});
+  HomePage_({this.username = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,7 @@ class HomePage extends StatelessWidget {
               title: Text('Home'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage(email: email)));
+                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
               },
             ),
             ListTile(
@@ -37,7 +42,7 @@ class HomePage extends StatelessWidget {
               title: Text('List'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(email: email)));
+                    builder: (_) => KatalogPage(username: username)));
               },
             ),
             ListTile(
@@ -45,7 +50,7 @@ class HomePage extends StatelessWidget {
               title: Text('About'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(email: email)));
+                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
               },
             ),
             ListTile(
@@ -76,7 +81,7 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 30.0,
                   ),
-                Text('Email : ' + email, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+                Text('username : ' + username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
               ],
             ),
           ),

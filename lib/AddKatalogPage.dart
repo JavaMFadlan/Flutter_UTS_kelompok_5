@@ -4,14 +4,14 @@ import 'KatalogPage.dart';
 import 'DBHelper.dart';
 
 class AddKatalogPage extends StatelessWidget {
- final String email;
+ final String username;
  final TextEditingController namaController = TextEditingController();
  final TextEditingController hargaController = TextEditingController();
  final TextEditingController deskripsiController = TextEditingController();
 
  final DBHelper dbHelper = DBHelper();
 
- AddKatalogPage({required this.email});
+ AddKatalogPage({required this.username});
 
  @override
  Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AddKatalogPage extends StatelessWidget {
             ),
            ElevatedButton(
              onPressed: () {
-               String email = this.email;
+               String username = this.username;
                String nama = namaController.text;
                int? harga = int.tryParse(hargaController.text);
                if (harga == null) {
@@ -59,9 +59,9 @@ class AddKatalogPage extends StatelessWidget {
                  return;
                }
                String deskripsi = deskripsiController.text;
-               dbHelper.insertKatalog(email, nama, harga, deskripsi);
+               dbHelper.insertKatalog(username, nama, harga, deskripsi);
                Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => KatalogPage(email: email)));
+                          MaterialPageRoute(builder: (_) => KatalogPage(username: username)));
              },
              child: const Text('Submit'),
            ),

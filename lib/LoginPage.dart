@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
                     User? user = await getLogin(email, password);
                     if (user != null) {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => HomePage(email: email)));
+                          MaterialPageRoute(builder: (_) => HomePage_(username: email)));
                     } else {
                       print("Login failed");
                     }

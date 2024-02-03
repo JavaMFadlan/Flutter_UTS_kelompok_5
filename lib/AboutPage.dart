@@ -4,9 +4,9 @@
     import 'KatalogPage.dart';
 
    class AboutPage extends StatelessWidget {
-  final String email;
+  final String username;
 
-  AboutPage({required this.email});
+  AboutPage({required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@
               title: Text('Home'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage(email: email)));
+                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
               },
             ),
             ListTile(
@@ -37,7 +37,7 @@
               title: Text('List'),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(email: email)));
+                    builder: (_) => KatalogPage(username: username)));
               },
             ),
             ListTile(
@@ -45,7 +45,7 @@
               title: Text('About'),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(email: email)));
+                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
               },
             ),
             ListTile(
