@@ -3,11 +3,12 @@ import 'repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
+import 'package:http_parser/http_parser.dart';
 
 class ProductRepository extends Repository {
   final Dio _dio = Dio();
 
-  Future addProduct({
+  Future<String> addProduct({
     required String title,
     required String desc,
     required String date,
@@ -18,18 +19,26 @@ class ProductRepository extends Repository {
         'title': title,
         'desc': desc,
         'date': date,
-        'image': await MultipartFile.fromFile(image.path, filename: 'image.jpg'),
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: 'image.jpg',
+          contentType: MediaType('image', 'jpg'),
+        ),
       });
 
-      Response response = await _dio.post('https://me-dis.000webhostapp.com/add-api.php', data: formData);
-      log("Response" + response.data);
+      Response response = await _dio.post(
+        'https://me-dis.000webhostapp.com/add-api.php',
+        data: formData,
+      );
+
       if (response.statusCode == 200) {
-        return response.data;
+        return response.data.toString();
       } else {
-        throw Exception('Failed to add data');
+        throw Exception('Failed to add data. Status code: ${response.statusCode}');
       }
     } catch (error) {
-      log('Error $error');
+      log('Error: $error');
+      throw Exception('Failed to add data. Error: $error');
     }
   }
 

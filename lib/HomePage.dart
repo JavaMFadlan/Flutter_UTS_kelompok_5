@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'KatalogPage.dart';
 import 'LoginPage.dart';
 import 'AboutPage.dart';
@@ -7,12 +8,21 @@ import 'layout/login.dart';
 import 'layout/loading.dart';
 import 'layout/dashboard.dart';
 import 'layout/error_message.dart';
+import 'layout/login.dart';
+import 'layout/adddatastate.dart';
+import 'layout/adddataform.dart';
 
-class HomePage_ extends StatelessWidget {
+
+class HomePage_ extends StatefulWidget {
   final String username;
 
   HomePage_({this.username = ''});
 
+  @override
+  _HomePage_State createState() => _HomePage_State();
+}
+
+class _HomePage_State extends State<HomePage_> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,59 +43,63 @@ class HomePage_ extends StatelessWidget {
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage_(username: widget.username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text('List'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(username: username)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => KatalogPage(username: widget.username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AboutPage(username: widget.username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => LoginPage()));
+                context.read<LoginBloc>().add(ProsesLogout());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Tambah Data'),
+              onTap: () {
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddDataForm()));
               },
             ),
           ],
         ),
       ),
       body: Transform.translate(
-          offset: Offset(0.0, -40.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Selamat Datang Kembali!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
-                SizedBox(
-                  height: 30.0,
-                  ),
-                CircleAvatar(
-                  backgroundColor: Colors.brown.shade800,
-                  radius: 60.0,
-                ),
-                SizedBox(
-                  height: 30.0,
-                  ),
-                Text('username : ' + username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
-              ],
-            ),
+        offset: Offset(0.0, -40.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Selamat Datang Kembali!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+              SizedBox(
+                height: 30.0,
+              ),
+              CircleAvatar(
+                backgroundColor: Colors.brown.shade800,
+                radius: 60.0,
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              Text('username : ' + widget.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+            ],
           ),
-          ),
+        ),
+      ),
     );
   }
 }
