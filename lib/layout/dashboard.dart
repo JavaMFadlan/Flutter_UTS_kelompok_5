@@ -2,32 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/login_bloc.dart';
+import 'adddatastate.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  final String sessionToken;
 
-  WelcomeScreen({required this.sessionToken});
 
+class Dashboard extends StatefulWidget {
+  final String name;
+  const Dashboard({required this.name});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Welcome')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Welcome!'),
-            Text('Session Token: $sessionToken'),
-            ElevatedButton(
-              onPressed: () {
-                // Dispatch logout event to Bloc
-                context.read<LoginBloc>().add(const ProsesLogout());
-              },
-              child: Text('Logout'),
-            ),
-          ],
-        ),
+      appBar: AppBar(title: Text('News Apps')),
+      body: Column(
+        children: <Widget>[
+          Text("Selamat Datang" + widget.name + "di sini"),
+          ElevatedButton(onPressed: (){
+            context.read<LoginBloc>().add(ProsesLogout());
+          }, child: Text("logout")),
+          ElevatedButton(onPressed: (){
+            Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AddState()));
+          }, child: Text("Tambah Data")),
+
+          
+      ],
       ),
     );
   }
 }
+
