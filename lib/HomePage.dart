@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_uts/layout/katalogpagestate.dart';
 import 'KatalogPage.dart';
-import 'LoginPage.dart';
+
 import 'AboutPage.dart';
 import '../bloc/login_bloc.dart';
-import 'layout/login.dart';
-import 'layout/loading.dart';
-import 'layout/dashboard.dart';
-import 'layout/error_message.dart';
-import 'layout/login.dart';
-import 'layout/adddatastate.dart';
-import 'layout/adddataform.dart';
 
+import 'layout/adddataform.dart';
 
 class HomePage_ extends StatefulWidget {
   final String username;
@@ -43,21 +38,26 @@ class _HomePage_State extends State<HomePage_> {
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage_(username: widget.username)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        HomePage_(username: widget.username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text('List'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => KatalogPage(username: widget.username)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => KatalogInfo()));
               },
             ),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AboutPage(username: widget.username)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        AboutPage(username: widget.username)));
               },
             ),
             ListTile(
@@ -72,7 +72,7 @@ class _HomePage_State extends State<HomePage_> {
               title: Text('Tambah Data'),
               onTap: () {
                 Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddDataForm()));
+                    MaterialPageRoute(builder: (context) => AddDataForm()));
               },
             ),
           ],
@@ -84,7 +84,9 @@ class _HomePage_State extends State<HomePage_> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Selamat Datang Kembali!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
+              Text('Selamat Datang Kembali!',
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0)),
               SizedBox(
                 height: 30.0,
               ),
@@ -95,7 +97,9 @@ class _HomePage_State extends State<HomePage_> {
               SizedBox(
                 height: 30.0,
               ),
-              Text('username : ' + widget.username, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+              Text('username : ' + widget.username,
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
             ],
           ),
         ),

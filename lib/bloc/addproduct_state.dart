@@ -29,6 +29,3 @@ class AddProductErrorState extends AddproductState {
   @override
   List<Object> get props => [error];
 }
-
-
-

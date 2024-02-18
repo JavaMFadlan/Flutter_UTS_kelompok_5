@@ -6,7 +6,7 @@ import 'adddataform.dart';
 class ProductForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddProductBloc, AddproductState>(
+    return BlocBuilder<AddproductBloc, AddproductState>(
       builder: (context, state) {
         if (state is AddProductInitialState) {
           return AddDataForm();
@@ -23,4 +23,3 @@ class ProductForm extends StatelessWidget {
     );
   }
 }
-

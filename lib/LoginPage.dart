@@ -1,71 +1,83 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
-import 'SignUpPage.dart';
-import 'DBHelper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_uts/SignUpPage.dart';
+import '../bloc/login_bloc.dart';
 
-class LoginPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
-  final DBHelper dbHelper = DBHelper();
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
 
-  Future<User?> getLogin(String email, String password) async {
-    return await dbHelper.getLogin(email, password);
-  }
-
+class _LoginFormState extends State<LoginForm> {
+  final TextEditingController _usernameController =
+      TextEditingController(text: "");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('login')),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          
           children: [
-            FlutterLogo(size: 100),
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-              ),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
             ),
-            TextFormField(
-              controller: passwordController,
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-              ),
             ),
-            SizedBox(
-              height: 30.0,
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                if (_usernameController.text == "" ||
+                    _passwordController.text == "") {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('kosong'),
+                        content: const Text('Harap masukan dengan sesuai'),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  final username = _usernameController.text;
+                  final password = _passwordController.text;
+
+                  context
+                      .read<LoginBloc>()
+                      .add(ProsesLogin(username: username, password: password));
+                }
+              },
+              child: Text('Login'),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    String email = emailController.text;
-                    String password = passwordController.text;
-                    User? user = await getLogin(email, password);
-                    if (user != null) {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => HomePage_(username: email)));
-                    } else {
-                      print("Login failed");
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => SignupPage()));
-                  },
-                  child: const Text('Register'),
-                ),
-              ],
-            )
-            
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegistrationForm()),
+                );
+              },
+              child: Text('Register'),
+            ),
           ],
         ),
       ),
