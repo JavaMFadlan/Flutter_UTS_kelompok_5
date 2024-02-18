@@ -1,102 +1,93 @@
 import 'package:flutter/material.dart';
-import 'DBHelper.dart';
-import 'Formats/Currency.dart';
-import 'HomePage.dart';
-import 'AboutPage.dart';
-import 'LoginPage.dart';
-import 'AddKatalogPage.dart';
-import 'DetailPage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_uts/layout/detailview.dart';
+import './bloc/listproduct_bloc.dart';
+import 'layout/katalogpagestate.dart';
 
-class KatalogPage extends StatelessWidget {
-  final String username;
-  final DBHelper dbHelper = DBHelper();
-  KatalogPage({required this.username});
+// ignore: must_be_immutable
+class ListInfoView extends StatelessWidget {
+  final List info;
+  String searchText;
+
+  ListInfoView({super.key, required this.info, this.searchText = ""});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController search0 = TextEditingController(text: searchText);
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Katalog'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+      appBar: AppBar(title: const Text("List Information")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: <Widget>[
-            DrawerHeader(
-              child: Text(''),
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            TextField(
+              controller: search0,
+              decoration: const InputDecoration(labelText: 'Cari informasi'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final search = search0.text;
+
+                context
+                    .read<ListproductBloc>()
+                    .add(LoadListProductEvent(keyword: search));
+              },
+              child: const Text('Cari'),
+            ),
+            SizedBox(
+                height:
+                    16.0), // Add some spacing between the search bar and the grid of cards
+            Expanded(
+              child: GridView.builder(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // Number of columns in the grid
+                  crossAxisSpacing: 5, // Spacing between columns
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 1, // Spacing between rows
+                ),
+                itemCount: info.length,
+                itemBuilder: (context, index) {
+                  final Map infoItem = info[index];
+                  return Card(
+                    margin: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Image.network(
+                          infoItem['img'],
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        ),
+                        ListTile(
+                          title: Text(infoItem['title']),
+                          subtitle: Text('Rp.' + infoItem['date']),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailInfo(
+                                  infoId: infoItem['id'].toString(),
+                                ),
+                              ),
+                            ).then((search) {
+                              final search = search0.text;
+
+                              context
+                                  .read<ListproductBloc>()
+                                  .add(LoadListProductEvent(keyword: search));
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text('List'),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(username: username)));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('About'),
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => LoginPage()));
-              },
             ),
           ],
         ),
-      ),
-      body: FutureBuilder<List<Katalog>>(
-        future: dbHelper.getKatalog(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    title: Text(snapshot.data![index].nama),
-                    subtitle: Text(CurrencyFormat.convertToIdr(snapshot.data![index].harga, 2)),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => DetailPage(id: snapshot.data![index].id, username: username)));
-                    },
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text("${snapshot.error}"));
-          }
-          return CircularProgressIndicator();
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddKatalogPage(username: username)));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.lightBlue,
       ),
     );
   }

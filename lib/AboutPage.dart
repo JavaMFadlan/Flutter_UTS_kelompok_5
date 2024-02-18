@@ -1,9 +1,10 @@
-    import 'package:flutter/material.dart';
-    import 'HomePage.dart';
-    import 'LoginPage.dart';
-    import 'KatalogPage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_uts/bloc/login_bloc.dart';
+import 'package:flutter_uts/layout/katalogpagestate.dart';
+import 'HomePage.dart';
 
-   class AboutPage extends StatelessWidget {
+class AboutPage extends StatelessWidget {
   final String username;
 
   AboutPage({required this.username});
@@ -18,7 +19,7 @@
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-           DrawerHeader(
+            DrawerHeader(
               child: Text(''),
               decoration: BoxDecoration(
                 color: Colors.blue,
@@ -28,32 +29,31 @@
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => HomePage_(username: username)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => HomePage_(username: username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.list),
               title: Text('List'),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => KatalogPage(username: username)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => KatalogInfo()));
               },
             ),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AboutPage(username: username)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => AboutPage(username: username)));
               },
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => LoginPage()));
+                context.read<LoginBloc>().add(const ProsesLogout());
               },
             ),
           ],
@@ -61,22 +61,20 @@
       ),
       body: Center(
         child: Column(
-          
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-                  backgroundColor: Colors.blueAccent,
-                  radius: 60.0,
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-            Text('Kelompok 5', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0)),
+              backgroundColor: Colors.blueAccent,
+              radius: 60.0,
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            Text('Kelompok 5',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 36.0)),
           ],
         ),
       ),
     );
   }
 }
-
-

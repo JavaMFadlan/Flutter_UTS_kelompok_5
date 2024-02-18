@@ -7,32 +7,35 @@ import 'package:flutter_uts/repository/product_repository.dart';
 part 'addproduct_event.dart';
 part 'addproduct_state.dart';
 
-class AddProductBloc extends Bloc<AddproductEvent, AddproductState> {
+class AddproductBloc extends Bloc<AddproductEvent, AddproductState> {
   final ProductRepository productRepository;
-
-  AddProductBloc({required this.productRepository}) : super(AddProductInitialState());
-
-  @override
-  Stream<AddproductState> mapEventToState(AddproductEvent event) async* {
-    if (event is AddproductInitial) { // Corrected typo here
-      yield* _mapAddProductInitialToState(event);
-    }
+  AddproductBloc({required this.productRepository})
+      : super(AddProductInitialState()) {
+    on<AddproductInitial>(_addproductinitial);
+    on<ClickTombolAddEvent>(_addproductclick);
   }
 
-  Stream<AddproductState> _mapAddProductInitialToState(AddproductInitial event) async* { // Corrected typo here
+  _addproductinitial(AddproductInitial event, Emitter emit) async {
+    emit(AddProductLoadingState());
+    emit(AddProductInitialState());
+  }
+
+  _addproductclick(ClickTombolAddEvent event, Emitter emit) async {
+    final String judul = event.title;
+    final String deskripsi = event.content;
+    final String tanggal = event.date;
+    final File gambar = event.image;
+    emit(AddProductLoadingState());
+
     try {
-      yield AddProductLoadingState(); // state 1
       final result = await productRepository.addProduct(
-        title: event.title,
-        desc: event.desc,
-        date: event.date,
-        image: event.image,
-      );
-      yield AddProductSuccessState(message: result); // state 2 if success
+          title: judul, desc: deskripsi, date: tanggal, image: gambar);
+
+      emit(AddProductSuccessState(message: result));
       await Future.delayed(Duration(seconds: 3));
-      yield AddProductInitialState(); // state 3 after delay
+      emit(AddProductLoadingState());
     } catch (error) {
-      yield AddProductErrorState(error: 'Error: $error'); // state 3 if error
+      emit(AddProductErrorState(error: "Error $error"));
     }
   }
 }

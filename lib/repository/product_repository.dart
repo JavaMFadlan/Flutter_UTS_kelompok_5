@@ -16,25 +16,23 @@ class ProductRepository extends Repository {
   }) async {
     try {
       FormData formData = FormData.fromMap({
-        'title': title,
-        'desc': desc,
-        'date': date,
-        'image': await MultipartFile.fromFile(
-          image.path,
-          filename: 'image.jpg',
-          contentType: MediaType('image', 'jpg'),
-        ),
+        'judul': title,
+        'deskripsi': desc,
+        'tanggal': date,
+        'url_image':
+            await MultipartFile.fromFile(image.path, filename: 'image.jpg'),
       });
 
       Response response = await _dio.post(
         'https://me-dis.000webhostapp.com/add-api.php',
         data: formData,
       );
+      log('${response.data}');
 
       if (response.statusCode == 200) {
-        return response.data.toString();
+        return response.data;
       } else {
-        throw Exception('Failed to add data. Status code: ${response.statusCode}');
+        throw Exception('failed to add information');
       }
     } catch (error) {
       log('Error: $error');
@@ -42,13 +40,12 @@ class ProductRepository extends Repository {
     }
   }
 
-
   Future<List> getProductList(keyword) async {
     try {
       log("GETTING PRODUCTS");
       var dio = Dio(); // Initialize Dio
       var response = await dio.get(
-        'https://me-dis.000webhostapp.com/list-api.php',
+        'https://me-dis.000webhostapp.com/show-api.php',
         queryParameters: {'key': keyword},
       );
       log("list $response");
@@ -67,27 +64,22 @@ class ProductRepository extends Repository {
     }
   }
 
-  Future<Map<String, dynamic>> selectProduct(String id) async {
+  Future selectInfo(String id) async {
     FormData formData = FormData.fromMap({
-      'idproduct': id, // Changed 'idnews' to 'idproduct'
+      'idp': id,
     });
-    try {
-      var dio = Dio(); // Initialize Dio
-      final response = await dio.post(
-        'https://me-dis.000webhostapp.com/show-api.php',
-        data: formData,
-      );
-      Map<String, dynamic> responseData = Map<String, dynamic>.from(response.data);
-      log("Res $responseData");
-      if (responseData['success'] == true) {
-        responseData['data']['status'] = true;
-        return responseData['data'];
-      } else {
-        return {'status': false, 'msg': responseData['msg']};
-      }
-    } catch (error) {
-      log('Dio Error: $error');
-      return {'status': false, 'msg': 'An error occurred.'}; // Handle Dio errors or network issues
+    final response = await _dio.post(
+      'https://me-dis.000webhostapp.com/list-api.php',
+      data: formData,
+    );
+    Map<String, dynamic> responseData =
+        Map<String, dynamic>.from(response.data);
+    log("Res $responseData");
+    if (responseData['success'] == true) {
+      responseData['data']['status'] = true;
+      return responseData['data'];
+    } else {
+      return {'status': false, 'msg': responseData['msg']};
     }
   }
 
@@ -101,7 +93,8 @@ class ProductRepository extends Repository {
         'https://me-dis.000webhostapp.com/delete-api.php',
         data: formData,
       );
-      Map<String, dynamic> responseData = Map<String, dynamic>.from(response.data);
+      Map<String, dynamic> responseData =
+          Map<String, dynamic>.from(response.data);
       if (responseData['status'] == true) {
         return true;
       } else {
@@ -109,6 +102,46 @@ class ProductRepository extends Repository {
       }
     } catch (error) {
       throw error.toString(); // Throw the error for further handling
+    }
+  }
+
+  Future editInfo(
+      {required String id,
+      required String title,
+      required String content,
+      required String date,
+      File? image}) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'idinfo': id,
+        'judul': title,
+        'deskripsi': content,
+        'tanggal': date,
+      });
+      if (image != null) {
+        formData = FormData.fromMap({
+          'idinfo': id,
+          'judul': title,
+          'deskripsi': content,
+          'tanggal': date,
+          'url_image':
+              await MultipartFile.fromFile(image.path, filename: 'image.jpg'),
+        });
+      }
+
+      Response response = await _dio.post(
+        'https://me-dis.000webhostapp.com/edit-api.php',
+        data: formData,
+      );
+      log("RES ${response.data}");
+
+      if (response.statusCode == 200 && response.data['status'] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw Exception('Error: $error');
     }
   }
 }
